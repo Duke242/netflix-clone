@@ -9,6 +9,7 @@ import UIKit
 
 class HeroHeaderUIView: UIView {
     
+    // Create a download button
     private let downloadButton: UIButton = {
         let button = UIButton()
         button.setTitle("Download", for: .normal)
@@ -19,6 +20,7 @@ class HeroHeaderUIView: UIView {
         return button
     }()
     
+    // Create a play button
     private let playButton: UIButton = {
         let button = UIButton()
         button.setTitle("Play", for: .normal)
@@ -56,32 +58,36 @@ class HeroHeaderUIView: UIView {
         // Add the gradient layer to the view's layer
         layer.addSublayer(gradientLayer)
     }
-
+    
     // Custom initializer
     override init(frame: CGRect) {
         super.init(frame: frame)
-        // Add the hero image view as a subview
         addSubview(heroImageView)
-        // Call the method to add the gradient
         addGradient()
+        // Add the play and download buttons as subviews
         addSubview(playButton)
         addSubview(downloadButton)
+        // Apply constraints to position the buttons
         applyConstraints()
     }
     
-    private func applyConstraints(){
+    // Method to apply constraints to the buttons
+    private func applyConstraints() {
+        // Define constraints for the play button
         let playButtonConstraints = [
             playButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 70),
             playButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -50),
             playButton.widthAnchor.constraint(equalToConstant: 120)
         ]
         
+        // Define constraints for the download button
         let downloadButtonConstraints = [
             downloadButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -70),
             downloadButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -50),
             downloadButton.widthAnchor.constraint(equalToConstant: 120)
         ]
         
+        // Activate all the constraints
         NSLayoutConstraint.activate(playButtonConstraints)
         NSLayoutConstraint.activate(downloadButtonConstraints)
     }
@@ -97,5 +103,5 @@ class HeroHeaderUIView: UIView {
     required init?(coder: NSCoder) {
         fatalError()
     }
-
+    
 }

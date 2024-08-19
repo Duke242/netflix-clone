@@ -2,6 +2,8 @@ import UIKit
 
 class HomeViewController: UIViewController {
     
+    let sectionTitles: [String] = ["Trending Movies", "Popular", "Trending Tv", "Upcoming Movies", "Top Rated"]
+    
     // Create a private UITableView property with a closure
     private let homeFeedTable: UITableView = {
         // Initialize a new UITableView with zero frame and grouped style
@@ -31,15 +33,22 @@ class HomeViewController: UIViewController {
     }
     
     private func configureNavbar() {
+        // Load the Netflix logo image
         var image = UIImage(named: "netflixLogo")
+        // Ensure the image is rendered as is, without any tint
         image = image?.withRenderingMode(.alwaysOriginal)
+        // Set the left bar button item with the Netflix logo
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: .done, target: self, action: nil)
         
+        // Set the right bar button items
         navigationItem.rightBarButtonItems = [
+            // Add a 'person' icon button
             UIBarButtonItem(image: UIImage(systemName: "person"), style: .done, target: self, action: nil),
+            // Add a 'play.rectangle' icon button
             UIBarButtonItem(image: UIImage(systemName: "play.rectangle"), style: .done, target: self, action: nil)
         ]
         
+        // Set the tint color of the navigation bar to white
         navigationController?.navigationBar.tintColor = .white
     }
     
@@ -56,7 +65,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     // Define the number of sections in the table view
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 20
+        return sectionTitles.count
     }
     
     // Define the number of rows in each section
@@ -84,10 +93,28 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         return 40
     }
     
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        guard let header = view as? UITableViewHeaderFooterView else {return}
+        header.textLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
+        header.textLabel?.frame = CGRect(x: header.bounds.origin.x + 20, y: header.bounds.origin.y , width: 100, height: header.bounds.height)
+        header.textLabel?.textColor = .white
+        header.textLabel?.text = header.textLabel?.text?.lowercased()
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return sectionTitles[section]
+    }
+    
+    
+    // Method called when the scroll view (table view in this case) is scrolled
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        // Get the default offset, which is the top safe area inset
         let defaultOffset = view.safeAreaInsets.top
+        // Calculate the total offset by adding the content offset and the default offset
         let offset = scrollView.contentOffset.y + defaultOffset
         
+        // Transform the navigation bar based on the scroll offset
+        // This creates a hiding effect for the navigation bar when scrolling down
         navigationController?.navigationBar.transform = .init(translationX: 0, y: min(0, -offset))
     }
 }

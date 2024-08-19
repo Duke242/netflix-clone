@@ -30,6 +30,8 @@ class HomeViewController: UIViewController {
         // Create and set a custom header view for the table
         let headerView = HeroHeaderUIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 450))
         homeFeedTable.tableHeaderView = headerView
+        
+        getTrendingMovies()
     }
     
     private func configureNavbar() {
@@ -56,6 +58,19 @@ class HomeViewController: UIViewController {
         super.viewDidLayoutSubviews()
         // Set the frame of the table view to match the view's bounds
         homeFeedTable.frame = view.bounds
+    }
+    
+    private func getTrendingMovies(){
+        APICaller.shared.getTrendingMovies { results in
+            switch results {
+            case .success(let movies):
+                print(movies)
+            
+            case .failure(let error):
+                print(error)
+
+        }
+        }
     }
     
 }

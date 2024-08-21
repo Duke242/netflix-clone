@@ -39,6 +39,7 @@ class HomeViewController: UIViewController {
         // Create and set a custom header view for the table
         let headerView = HeroHeaderUIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 450))
         homeFeedTable.tableHeaderView = headerView
+
         
     }
     
@@ -88,6 +89,8 @@ class HomeViewController: UIViewController {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: CollectionViewTableViewCell.identifier, for: indexPath) as? CollectionViewTableViewCell else {
                 return UITableViewCell()
             }
+            
+            cell.delegate = self
             
           
             switch indexPath.section {
@@ -184,4 +187,14 @@ class HomeViewController: UIViewController {
             navigationController?.navigationBar.transform = .init(translationX: 0, y: min(0, -offset))
         }
     }
+
+extension HomeViewController: CollectionViewTableViewCellDelegate {
+    func collectionViewTableViewCellDidTapCell(_ cell: CollectionViewTableViewCell, viewModel: TitlePreviewViewModel) {
+        DispatchQueue.main.async { [weak self] in
+            let vc = TitlePreviewViewController()
+            vc.configure(with: viewModel)
+            self?.navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+}
 

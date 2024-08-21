@@ -10,6 +10,9 @@ import UIKit
 class CollectionViewTableViewCell: UITableViewCell {
     
     // Static identifier for cell reuse
+    
+    private var titles: [Title] = [Title]()
+    
     static let identifier = "CollectionViewTableViewCell"
     
     // Private UICollectionView property with a closure
@@ -24,7 +27,7 @@ class CollectionViewTableViewCell: UITableViewCell {
         // Initialize the collection view with the layout
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         // Register a default UICollectionViewCell for reuse
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.register(TitleCollectionViewCell.self, forCellWithReuseIdentifier: TitleCollectionViewCell.identifier)
         return collectionView
     }()
     
@@ -52,21 +55,34 @@ class CollectionViewTableViewCell: UITableViewCell {
         // Set the frame of the collection view to match the content view's bounds
         collectionView.frame = contentView.bounds
     }
+    
+    public func configure(with titles: [Title]){
+        self.titles = titles
+        DispatchQueue.main.async { [weak self] in
+            self?.collectionView.reloadData()
+        }
+    }
+    
 }
 
 // Extension to conform to UICollectionViewDelegate and UICollectionViewDataSource protocols
 extension CollectionViewTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource {
     // Provide a cell for each item in the collection view
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        // Dequeue a reusable cell
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-        // Set the background color of the cell
-        cell.backgroundColor = .green
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TitleCollectionViewCell.identifier, for: indexPath) as? TitleCollectionViewCell else {
+            return UICollectionViewCell()
+        }
+        
+        guard let model = titles[indexPath.row].poster_path else {
+            return UICollectionViewCell()
+        }
+        cell.configure(with: model)
+        
         return cell
     }
     
     // Define the number of items in the collection view
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return titles.count
     }
 }

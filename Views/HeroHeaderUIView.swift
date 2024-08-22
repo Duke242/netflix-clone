@@ -9,82 +9,72 @@ import UIKit
 
 class HeroHeaderUIView: UIView {
     
-    // Create a download button
+    // Create a download button with specific properties
     private let downloadButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Download", for: .normal)
-        button.layer.borderColor = UIColor.white.cgColor
-        button.layer.borderWidth = 1
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.layer.cornerRadius = 5
+        button.setTitle("Download", for: .normal) // Set button title
+        button.layer.borderColor = UIColor.white.cgColor // Set border color
+        button.layer.borderWidth = 1 // Set border width
+        button.translatesAutoresizingMaskIntoConstraints = false // Enable Auto Layout
+        button.layer.cornerRadius = 5 // Set corner radius
         return button
     }()
     
-    // Create a play button
+    // Create a play button with specific properties
     private let playButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Play", for: .normal)
-        button.layer.borderColor = UIColor.white.cgColor
-        button.layer.borderWidth = 1
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.layer.cornerRadius = 5
+        button.setTitle("Play", for: .normal) // Set button title
+        button.layer.borderColor = UIColor.white.cgColor // Set border color
+        button.layer.borderWidth = 1 // Set border width
+        button.translatesAutoresizingMaskIntoConstraints = false // Enable Auto Layout
+        button.layer.cornerRadius = 5 // Set corner radius
         return button
     }()
     
-    // Private UIImageView property with a closure
+    // Private UIImageView property with a closure for setup
     private let heroImageView: UIImageView = {
         let imageView = UIImageView()
-        // Set the content mode to scale and fill the image view
-        imageView.contentMode = .scaleAspectFill
-        // Enable clipping to bounds to prevent image from overflowing
-        imageView.clipsToBounds = true
-        // Set the image to a named image in the asset catalog
-        imageView.image = UIImage(named: "monteCristo")
+        imageView.contentMode = .scaleAspectFill // Scale the image to fill the view
+        imageView.clipsToBounds = true // Clip image to bounds of the view
+        imageView.image = UIImage(named: "monteCristo") // Set default image
         return imageView
     }()
     
-    // Private method to add a gradient overlay
+    // Private method to add a gradient overlay to the view
     private func addGradient() {
-        // Create a CAGradientLayer
-        let gradientLayer = CAGradientLayer()
-        // Set the colors for the gradient (clear to system background)
+        let gradientLayer = CAGradientLayer() // Create a gradient layer
         gradientLayer.colors = [
-            UIColor.clear.cgColor,
-            UIColor.systemBackground.cgColor
+            UIColor.clear.cgColor, // Start color (clear)
+            UIColor.systemBackground.cgColor // End color (system background)
         ]
-        // Set the frame of the gradient to match the view's bounds
-        gradientLayer.frame = bounds
-        
-        // Add the gradient layer to the view's layer
-        layer.addSublayer(gradientLayer)
+        gradientLayer.frame = bounds // Set gradient frame to match view's bounds
+        layer.addSublayer(gradientLayer) // Add gradient layer to view's layer
     }
     
-    // Custom initializer
+    // Custom initializer to set up the view
     override init(frame: CGRect) {
         super.init(frame: frame)
-        addSubview(heroImageView)
-        addGradient()
-        // Add the play and download buttons as subviews
-        addSubview(playButton)
-        addSubview(downloadButton)
-        // Apply constraints to position the buttons
-        applyConstraints()
+        addSubview(heroImageView) // Add hero image view as a subview
+        addGradient() // Add gradient overlay
+        addSubview(playButton) // Add play button as a subview
+        addSubview(downloadButton) // Add download button as a subview
+        applyConstraints() // Apply constraints to buttons
     }
     
-    // Method to apply constraints to the buttons
+    // Method to apply Auto Layout constraints to buttons
     private func applyConstraints() {
-        // Define constraints for the play button
+        // Constraints for play button
         let playButtonConstraints = [
-            playButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 70),
-            playButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -50),
-            playButton.widthAnchor.constraint(equalToConstant: 120)
+            playButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 70), // Position 70 points from the leading edge
+            playButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -50), // Position 50 points from the bottom edge
+            playButton.widthAnchor.constraint(equalToConstant: 120) // Set button width to 120 points
         ]
         
-        // Define constraints for the download button
+        // Constraints for download button
         let downloadButtonConstraints = [
-            downloadButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -70),
-            downloadButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -50),
-            downloadButton.widthAnchor.constraint(equalToConstant: 120)
+            downloadButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -70), // Position 70 points from the trailing edge
+            downloadButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -50), // Position 50 points from the bottom edge
+            downloadButton.widthAnchor.constraint(equalToConstant: 120) // Set button width to 120 points
         ]
         
         // Activate all the constraints
@@ -92,22 +82,21 @@ class HeroHeaderUIView: UIView {
         NSLayoutConstraint.activate(downloadButtonConstraints)
     }
     
+    // Method to configure the view with a TitleViewModel
     public func configure(with model: TitleViewModel) {
-        guard let url = URL(string: "https://image.tmdb.org/t/p/w500\(model.posterURL)") else {return}
-        
+        guard let url = URL(string: "https://image.tmdb.org/t/p/w500\(model.posterURL)") else { return }
+        // Set the image of the heroImageView using SDWebImage
         heroImageView.sd_setImage(with: url, completed: nil)
     }
     
-    // Layout subviews
+    // Layout subviews to ensure the hero image view fills the view
     override func layoutSubviews() {
         super.layoutSubviews()
-        // Set the frame of the hero image view to match the view's bounds
-        heroImageView.frame = bounds
+        heroImageView.frame = bounds // Set frame to match the view's bounds
     }
     
     // Required initializer (not implemented, will crash if called)
     required init?(coder: NSCoder) {
         fatalError()
     }
-    
 }
